@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 기계학습기초
+title: 기계학습스터디] 기계학습기초
 ---
 
 
