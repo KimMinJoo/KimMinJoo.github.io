@@ -3,8 +3,6 @@ layout: post
 title: 알고리즘스터디] Greedy Algorithm
 ---
 
-## 탐욕 알고리즘 (Greedy Algorithm)
-
 탐욕알고리즘의 경우 그 순간 최적의 해를 선택하는 알고리즘으로 많이 알고있습니다.<br>
 하지만 탐욕알고리즘은 한번 선택한 결정을 바꾸지 않는 알고리즘입니다.
 
