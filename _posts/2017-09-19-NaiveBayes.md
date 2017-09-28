@@ -68,17 +68,153 @@ p1(x,y) < p2(x,y)이면, 분류항목 2에 속한다.<br>
 결국 p(c1|x,y)과 p(c2|x,y)를 비교할 때, p(x,y|c1), p(c1), p(x,y|c2), p(c2)만 안다면 대소비교가 가능한것입니다.<br>
 따라서 p(c|x,y)를 모르더라도 p(x,y|c)와 p(c)만 알 수 있는 상황에서 나이브베이즈를 사용하면 된다.<br>
 <br>
-한가지 예를 들어서 설명을 하겠다.
-- c1,c2는 폭력적문장, 비폭력적문장이라는 조건이다.
-- s는 s라는 어떤 문장이 들어오는 조건이다.
-
-즉 따라서 P(c1|s)과 P(c2|s)를 비교할 때,<br>
-풀어서 얘기하면 s라는 문장이 들어왔을 때 이 문장이 c1일 확률이 높냐 c2일 확률이 높냐를 구하기 위해서는 아래와같은 4가지만 알면된다.<br>
-- P(s|c1) : 폭력적인 문장에 s라는 문장에 존재하는 단어들이 나올 확률.
-- P(c1) : 폭력적인 문장일 확률.
-- P(s|c2) : 비폭력적인 문장에 s라는 문장에 존재하는 단어들이 나올 확률.
-- P(c2) : 비폭력적인 문장이 나올 확률.
-
-저런 조건들은 여러 트레이닝데이터(폭력,비폭력이 구분된 문장들)을 가지고 구할 수 있다.
+즉 어떤 조건이 들어왔을때 그게 어느 분류인지는 모르지만, 어느 분류에서 어떤 조건들이 많이 나타나는 경우에 사용할 수 있다.
 
 ### Naive Bayes예제 코드
+
+예제 코드로는 얘기했던 문서 분류를 진행하겠다.<br>
+<br>
+문서분류에서 각 단어를 속성처럼 사용해서 해당 문서에 존재하는지 아닌지를 확인해 볼 수 있다.<br>
+어휘 목록에 1000개의 단어가 있다고 가정해보자.<br>
+<br>
+하나의 속성에 대해 N개의 표본이 필요하다면 어휘 목록에 있는 1000개의 속성을 위해서는 N^1000개의 표본이 필요하게된다.<br>
+단어 하나가 증가할 때마다 표본의 숫자가 기하급수적으로 늘어나게 된다.<br>
+<br>
+하지만 속성들이 독립적이라고 가정을 하게 된다면 1000 x N으로 줄게된다.<br>
+즉, 하나의 속성(단어)가 다른 속성 옆에도 있을 가능성이 있다는 것이다.<br>
+이 가정은 아래의 두가지때문에 사실 틀린것이다.<br>
+- 각 단어들은 연관성을 가지고 연관성이 높은 단어들이 같이 등장할 확률이 높다.
+- 각 단어들이 모두 독립적이라면 모든 단어들의 중요도가 똑같다는것을 의미한다. 하지만 문장에서 중요한 단어는 존재할 수 있다.
+
+<br>
+하지만 이런 가정의 결함에도 불구하고 Naive Bayes는 일을 잘 수행한다.<br>
+<br>
+이제 코드를 보도록 하겠다.<br>
+먼저 문서분류예제이므로 문서를 읽어오는 코드를 작성하겠다.<br> 
+
+#### 문서 분류 코드
+```python
+def loadDataSet(fileName):
+    #파일을 읽는다.
+    fr = open(fileName, 'rt', encoding='UTF8')
+    #파일의 각 줄로 배열을 만든다.
+    arrayOfLines = fr.readlines()
+    #0으로된 (파일줄수, k)의 matrix를 만든다.
+    classVec = []
+    #단어를 저장할 배열을 만든다.
+    wordList = [];
+    #각 라인의 데이터를 매트릭스와 라벨베열에 넣어준다.
+    for line in arrayOfLines:
+        #문자 양끝 공백제거. (필요에 따라 생략가능)
+        line = line.strip()
+        #라인을 space기준으로 스플릿하여 리스트로 만든다.
+        listFromLine = line.split(' ')
+        #단어리스트에 추가시켜준다.
+        wordList.append(listFromLine[0:-1])
+        #데이터 마지막에 있는 구분값을 구분벡터에 넣어준다..
+        classVec.append(int(listFromLine[-1]))
+    return wordList, classVec
+```
+
+위의 코드는 파일을 읽어서 단어별 분류와 속성의 분류를 하는 코드이다.<br>
+파일의 형태는 각라인이 문장 속성 과 같은 형태로 구성되어있다.
+Ex)
+```text
+my dog has flea problems help pleas 0
+maybe not take him to dog park stupid 1
+my dalmation is so cute I love hime 0
+stop posting stupid worthless garbage 1
+mr licks ate my steak how to stop him 0
+quit buying worthless dog food stupid 1
+```
+
+단어별 분류와 속성 분류가 끝났으면 일단 우리가 Naive Bayes에서 쓸 수 있는 확률로 변환시켜야한다.<br>
+아래는 단어들의 중복제거와 중복제거를 통한 각 문장을 벡터로 만드는 함수이다.
+#### 단어들의 중복제거
+```python
+def createVocabList(dataSet):
+    vocabSet = set([])
+    for document in dataSet:
+        vocabSet = vocabSet | set(document)
+    return list(vocabSet)
+```
+
+#### 문장을 벡터로 변환하는 함수
+```python
+def setOfWords2Vec(vocabList, sentence):
+    returnVec = [0]*len(vocabList)
+    for word in sentence:
+        if word in vocabList:
+            returnVec[vocabList.index(word)] += 1
+        else:
+            print("the word: %s is not in my vocabulary" % word)
+    return returnVec
+```
+
+
+```python
+def trainNaiveBayes(trainMatrix, trainCategory):
+    numTrainDocs = len(trainMatrix)
+    numWords = len(trainMatrix[0])
+
+    # 카테고리수 / 총문장갯수 => 문장이 들어왔을때 어느 카테고리일지 나타내는 확률
+    pAbusive = sum(trainCategory) / float(numTrainDocs)
+    p0Num = ones(numWords)
+    p1Num = ones(numWords)
+    p0Denom = 2.0
+    p1Denom = 2.0
+    for i in range(numTrainDocs):
+        if trainCategory[i] == 1:
+            p1Num += trainMatrix[i]
+            p1Denom += sum(trainMatrix[i])
+        else:
+            p0Num += trainMatrix[i]
+            p0Denom += sum(trainMatrix[i])
+    p1Vect = log(p1Num / p1Denom)
+    p0Vect = log(p0Num/ p0Denom)
+
+    return p0Vect, p1Vect, pAbusive
+```
+
+```python
+def classifyNaiveBayes(vec2Classify, p0Vec, p1Vec, pClass1):
+    p1 = sum(vec2Classify * p1Vec) + log(pClass1)
+    p0 = sum(vec2Classify * p0Vec) + log(1 - pClass1)
+    if p1 > p0:
+        return 1
+    else:
+        return 0
+```
+
+```python
+def executeNaiveBayesTraining(fileName):
+    #데이터 로드하고
+    listOfPosts, listClasses = loadDataSet(fileName)
+    postCount = len(listOfPosts)
+    #트레이닝 데이터 뽑고
+    trainStartNum = int(postCount * 0.1)
+    trainPost = listOfPosts[trainStartNum:]
+    #검증 데이터 뽑고
+    verificationPost = listOfPosts[:trainStartNum]
+    #단어 리스트만들고
+    myVocabList = createVocabList(listOfPosts)
+    #트레이닝 시키고
+    trainMat = []
+    for postInDoc in trainPost:
+        trainMat.append(setOfWords2Vec(myVocabList, postInDoc))
+
+    p0V, p1V, pAb = trainNaiveBayes(trainMat, listClasses)
+
+    answerCount = 0
+    #검증단계.
+    for i in range(trainStartNum):
+        print(verificationPost[i])
+        verificationDoc = array(setOfWords2Vec(myVocabList, verificationPost[i]))
+        verificationClass = classifyNaiveBayes(verificationDoc, p0V, p1V, pAb)
+        print(verificationClass)
+        if verificationClass == listClasses[i]:
+            answerCount += 1
+
+    answerPercent = answerCount / postCount * 0.1;
+    print("잘맞았나 확률 : %f" % answerPercent)
+```
