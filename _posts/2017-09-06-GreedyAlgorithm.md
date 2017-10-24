@@ -3,8 +3,12 @@ layout: post
 title: 알고리즘스터디] Greedy Algorithm
 ---
 
+### Greedy Algorithm이란?
+
+Greedy = 탐욕 -> 욕심을 부리다 -> 눈 앞의 상황만으로 결정을 내린다 -> 근시안적으로 택하다.<br>
+<br>
 탐욕알고리즘의 경우 그 순간 최적의 해를 선택하는 알고리즘으로 많이 알고있습니다.<br>
-하지만 탐욕알고리즘은 한번 선택한 결정을 바꾸지 않는 알고리즘입니다.
+하지만 더 정확한 탐욕알고리즘의 정의는 한번 선택한 결정을 바꾸지 않는 알고리즘입니다.
 
 ### 탐욕 알고리즘의 패턴
 아무것도 가지지않은 집합으로 시작해 반복문을 돌며 순간순간 결정을 집합에 추가해 나가고 마지막에 나온 집합을 해로 반환한다.
@@ -30,12 +34,118 @@ for (u in U) {
 - 한번 선택한 결정을 바꾸지 않으므로 성능이 뛰어난 알고리즘이 많다.<br>
 - 그 순간순간 답을 찾기때문에 항상 최적의 답을 찾는 알고리즘은 아닐 수 있다.<br>
 
+## 탐욕알고리즘의 예시들
+
+### 동전 거스름돈 문제 (Coin Change Problem)
+최소한의 동전을 이용하여 거스름돈을 만드는 방법을 찾는 문제를 의미한다.<br>
+이때 거스름돈을 만들때 가능한 한 동전의 개수가 적으면 적을수록 좋다.<br>
+
+#### 예시
+거스름돈 : 170원<br>
+<br>
+|       | 10원 | 50원 | 100원 | 500원 |
+|:-----:|:----:|:----:|:-----:|:-----:|
+| 후보1 |   17 |    0 |     0 |     0 |
+| 후보2 |   12 |    1 |     0 |     0 |
+| 후보3 |    7 |    2 |     0 |     0 |
+| 후보4 |    2 |    3 |     0 |     0 |
+| 후보5 |    2 |    1 |     1 |     0 |
+
+170원이란 돈을 거스름돈으로 만드는 방법은 위의 표와 같이 5가지가 있다.<br>
+그 중 동전의 개수가 가장 적은 후보5가 최적해라고 할 수 있다.<br>
+<br>
+이처럼 적은 수의 동전으로 거스름돈을 구하려면 어떻게 해야할까?<br>
+<br>
+먼저 어떤 '기준'을 사용하여 동전을 선택할 수 있을까?<br>
+일상생활에서 거스름돈을 어떻게 계산하는지 생각해보면 간단히 알 수 있다.<br>
+그 기준은 큰 단위의 동전부터 차례로 사용하는 것이다.<br>
+큰 동전의 개수를 구하고 큰 동전을 더이상 쓸 수 없을 때 그다음으로 큰 단위 동전을 이용하면 됩니다.<br>
+<br>
+### Pseudo Code
+```java
+동전들을 정렬
+for (동전 : 동전들) {
+	동전의 최대 갯수 선택
+	개수저장
+	정답일 경우 알고리즘종료
+}
+```
+
+### 구현 코드
+```java
+public class CoinChangeProblem {
+	Integer[] conins;
+
+	public CoinChangeProblem(Integer[] conins) {
+		this.conins = conins;
+		Arrays.sort(conins, Collections.reverseOrder()); // 이 문제에서 소팅까지 구현할 필요가 없으므로 구현된걸 사용하기 위해 int가 아닌 Integer사용
+	}
+
+	public void printCoinChange(int totalChange) {
+		for (Integer coin : conins) {
+			int coinNum = totalChange / coin;
+			totalChange = totalChange - (coin * coinNum);
+			System.out.println(coin + "원의 개수 : " + coinNum);
+		}
+	}
+}
+```
+
+#### TestCode
+
+```java
+public class CoinChangeProblemTest {
+	/**
+	 * 최적해인 경우 테스트
+	 */
+	@Test
+	public void CoinChangeProblemTest1() {
+		Integer[] coins = {10, 100, 500, 50};
+		CoinChangeProblem coinChangeProblem = new CoinChangeProblem(coins);
+		coinChangeProblem.printCoinChange(170);
+	}
+}
+```
+
+|  동전 | 동전개수 |
+|:-----:|:--------:|
+|  10원 |        2 |
+|  50원 |        1 |
+| 100원 |        1 |
+| 500원 |        0 |
+
+
+```java
+public class CoinChangeProblemTest {
+    /**
+	 * 최적해가 아닌 경우 테스트
+	 * 120원 2개가 최적해.
+	 */
+	@Test
+	public void CoinChangeProblemTest2() {
+		Integer[] coins = {10, 120, 100, 200, 50};
+		CoinChangeProblem coinChangeProblem = new CoinChangeProblem(coins);
+		coinChangeProblem.printCoinChange(240);
+	}
+}
+```
+
+|  동전 | 동전개수 |
+|:-----:|:--------:|
+|  10원 |        4 |
+|  50원 |        0 |
+| 100원 |        0 |
+| 120원 |        0 |
+| 200원 |        1 |
+<br>
+<br>
+동전거스름문제와는 다르게 아래의 예시들은 그래프 자료구조가 쓰인다.<br>
+따라서 그래프자료구조에 대해 먼저 설명하겠다.
+
 ### 그래프(Graph)
 그래프는 노드와 간선을 이용한 복잡한 현실 세계를 손쉽게 나타낼 수 있어 여러 자료구조중 표현능력이 가장 뛰어나다.<br>
 
-
 ### 용어 설명
-탐욕알고리즘에 대해 설명하기전에 몇 가지 자료구조에 대해 설명하겠다.<br>
 
 - 노드(Node) : 정점을 의미하며 Vertex라고도 한다.<br>
 - 에지(Edge) : 정점간의 관계를 나타낸다.<br>
