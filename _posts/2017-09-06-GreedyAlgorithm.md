@@ -140,10 +140,188 @@ public class CoinChangeProblemTest {
 | 200원 |        1 |
 
 <br>
-<br>
-동전거스름문제와는 다르게 아래의 예시들은 그래프 자료구조가 쓰인다.<br>
-따라서 그래프자료구조에 대해 먼저 설명하겠다.
 
+***
+
+### 부분배낭문제(Kanpsack Problem)
+배낭문제의 경우 어떤 물건을 효율적으로 담을지 결정하는 문제를 말한다. 따라서 배낭에 담긴 물건의 가격 총액이 가능한 높도록 물건을 담아야 한다.<br>
+예를들어 설명하면 아래와 같다.
+
+|  이름 |  무게  |  가격  |
+|:-----:|:------:|:------:|
+|   A   |      1 |     500|
+|   B   |      2 |     300|
+|   C   |      3 |     900|
+|   D   |      4 |     800|
+위 표와 같은 물건이 존재하고 배낭의 무게가 총 5Kg이라 할때 A와 C를 담는게 최적의 방법이다.<br>
+<br>
+배낭문제가 어떤 문제인지는 알아봤고, '부분'배낭문제에 대해 알아보자.
+부분배낭문제의 경우 짐을 쪼갤 수 있는 경우를 뜻한다.<br>
+위의 예시를 그대로 사용한다고하면 A와 C를 담았을 경우 무게는 4kg이고 배낭의 총 무게는 5kg이므로 1kg이 남는다.
+따라서 아래와 같이 담을 때 최적이라고 볼 수 있다.
+
+```text
+KnapsackSimpleExample
+Item : A num : 1.0
+Item : C num : 1.0
+Item : D num : 0.25
+Item : B num : 0
+```
+
+#### Pseudo Code
+```java
+아이템을 효율(무게당 가격) 순서로 정렬
+for (item : itemList) {
+	if (남은무게가 0이 넘는가?){
+		item의 갯수 구하기.
+		남은무게 다시계산.
+	}
+}
+```
+#### 구현 코드
+```java
+public class Knapsack {
+	private List<Item> itemList;
+	private double weight;
+
+	public Knapsack(List<Item> itemList, double weight) {
+		this.itemList = itemList;
+		this.weight = weight;
+	}
+
+	public void printFractionalKnapsackProblem() {
+		Collections.sort(itemList, new UnitValueComparator());
+
+		double remainnigWeight = weight;
+		for (Item item : itemList) {
+			if (remainnigWeight > 0) {
+				double number = remainnigWeight / item.getWeight();
+				number = number > (double)item.getNumber() ? item.getNumber() : number;
+				System.out.println("Item : " + item.getName() + " num : " + number);
+				remainnigWeight -= item.getWeight() * number;
+			} else {
+				System.out.println("Item : " + item.getName() + " num : " + 0);
+			}
+		}
+	}
+}
+```
+
+#### Test Code
+
+테스트 코드의 경우 Junit5를 활용했다. Junit5는 다른 포스트에서 다룰 예정이다.
+```java
+@ExtendWith(MockitoExtension.class)
+public class KnapsackTest {
+	@BeforeEach
+	public void init() {
+		System.out.println("=====테스트 시작====");
+	}
+
+	@AfterEach
+	public void done() {
+		System.out.println("=====테스트 종료====");
+	}
+
+
+	@DisplayName("Junit5를 활용한 Knapsack테스트")
+	@ParameterizedTest
+	@MethodSource("knapsackParam")
+	public void KanpsackTest(Parameters<List> parameters) {
+		System.out.println(parameters.getDisplayName());
+		//when
+		Knapsack knapsack = new Knapsack(parameters.getParam(), parameters.getWeight());
+
+		//then
+		knapsack.printFractionalKnapsackProblem();
+	}
+
+	public static Stream<Parameters> knapsackParam() {
+		Item item1 = new Item("A", 500, 1, 1);
+		Item item2 = new Item("B", 300, 2, 1);
+		Item item3 = new Item("C", 900, 3, 1);
+		Item item4 = new Item("D", 800, 4, 1);
+		List<Item> itemList1 = new ArrayList<>();
+		itemList1.add(item1);
+		itemList1.add(item2);
+		itemList1.add(item3);
+		itemList1.add(item4);
+		Parameters<List> parameter1 = new Parameters<List>("KnapsackSimpleExample", itemList1, 5);
+
+		Item item5 = new Item("A", 500, 1, 1);
+		Item item6 = new Item("B", 300, 2, 1);
+		Item item7 = new Item("C", 900, 3, 1);
+		Item item8 = new Item("D", 800, 4, 1);
+		Item item9 = new Item("E", 1000000, 10, 1);
+		List<Item> itemList2 = new ArrayList<>();
+		itemList2.add(item5);
+		itemList2.add(item6);
+		itemList2.add(item7);
+		itemList2.add(item8);
+		itemList2.add(item9);
+		Parameters<List> parameter2 = new Parameters<List>("효율엄청좋은데_배낭무게넘는아이템", itemList2,5);
+
+		Item item = new Item("A", 500, 2, 5);
+		List<Item> itemList3 = new ArrayList<>();
+		itemList3.add(item);
+		Parameters<List> parameter3 = new Parameters<List>("부분배낭문제", itemList3, 9);
+
+		List<Parameters> parmetersList = new ArrayList<>();
+		parmetersList.add(parameter1);
+		parmetersList.add(parameter2);
+		parmetersList.add(parameter3);
+
+		return parmetersList.stream();
+	}
+}
+class Parameters<T> {
+	private String displayName;
+	private T param;
+	private int weight;
+
+	public Parameters(String displayName, T param, int weight) {
+		this.displayName = displayName;
+		this.param = param;
+		this.weight = weight;
+	}
+
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+
+	public T getParam() {
+		return param;
+	}
+
+	public void setParam(T param) {
+		this.param = param;
+	}
+
+	public int getWeight() {
+		return weight;
+	}
+
+	public void setWeight(int weight) {
+		this.weight = weight;
+	}
+
+	@Override
+	public String toString() {
+		return displayName
+				+ " {"
+				+ "param=" + param
+				+ '}';
+	}
+}
+```
+
+
+## 그래프를 활용한 탐욕알고리즘
+* * *
 ### 그래프(Graph)
 그래프는 노드와 간선을 이용한 복잡한 현실 세계를 손쉽게 나타낼 수 있어 여러 자료구조중 표현능력이 가장 뛰어나다.<br>
 
