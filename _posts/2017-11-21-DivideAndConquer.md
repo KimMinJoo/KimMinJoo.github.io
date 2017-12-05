@@ -110,3 +110,46 @@ public class Factorial {
 	}
 }
 ```
+
+## 가장 가까운 두 점 찾기 문제(Closest Pair Problem)
+
+가장 가까운 두 점을 찾는 가장 간단한 방법은 모든 경우를 다 계산해보는 것이다.
+예를들면 (점1, 점2)사이의 거리를 구하고 (점1, 점3)사이의 거리를 구하고 비교하면서 나아가는 방법이다.<br>
+
+하지만 이경우에 시간복잡도를 구해보면 O(n^2)이 나오게 된다.
+n^2이 나오게되는 경우는 점1 ~ 점n까지 존재한다고 가정할 때, 점1은 2 ~ n까지 n-1개의 점에대해서 경우를 구해야하고, 
+점2는 3 ~ n까지 n-2개의 점에 대해서 경우를 구해야하며 이런식으로 쭉 갔을때 결국 1 ~ (n-1)까지 전부 더한 숫자만큼의 경우가 나오게된다.
+이를 식으로 풀면 n(n-1)/2 이므로 O(n^2)이 시간복잡도가 된다.<br>
+
+### 분할 정복 알고리즘을 이용한 가장 가까운 두 점 찾기
+
+분할 정복 알고리즘을 적용하는 방법은 간단하다. 
+영역을 두 부분으로 나누어 각 부분에서 가장 가까운 거리를 가진 점을 찾는다. 
+그 뒤 영역사이에서 가장 가까운 거리를 가진 점들을 찾아 그 거리를 비교하면 된다.
+아래의 그림과 같은 상황이다.<br>
+<img src="https://raw.githubusercontent.com/KimMinJoo/KimMinJoo.github.io/2bae125894cf8dfa586bd9545a16a2049fc0b5fc/images/ClosestPairProblem.png"/>
+이증 가장 가까운 두점은 Min(Dleft, Dcenter, Dright)이다.<br>
+<br>
+이때 Dleft, Dright를 찾는 방법은 재귀를 이용한 방법으로 아래의 그림과 같으며 이는 분할 단계이다.<br>
+<img src="https://raw.githubusercontent.com/KimMinJoo/KimMinJoo.github.io/2bae125894cf8dfa586bd9545a16a2049fc0b5fc/images/ClosestPairProblem2.png"/>
+
+분할단계가 끝난 뒤 각 영역에서 구한 최소값(Min(Dleft, Dcenter, Dright))을 계속해서 합쳐서 다시 그중 최소값을 또 구해나가면 된다.
+이는 정복단계이다.<br>
+<img src="https://raw.githubusercontent.com/KimMinJoo/KimMinJoo.github.io/2bae125894cf8dfa586bd9545a16a2049fc0b5fc/images/ClosestPairProblem3.png"/>
+
+### Pseudo Code
+```java
+점들은 x좌표를 기준으로 정렬되어있다고 가정한다.
+public Point[] closestPairRecursive(점들) {
+	if (점들의 개수가 3개 이하일 경우) {
+		return 모든 경우의 대한 최소 거리;
+	}
+	
+	가운데점을 기준으로 점들은 L, R영역으로 분할.
+	Dleft = closestPairRecursive(L영역);
+	Dright = closestPairRecursive(R영역);
+	Dcenter = 중간 영역의 점들에서 가장 가까운 거리 구하기;
+
+    return Min(Dleft, Dright, Dcenter);
+}
+```
