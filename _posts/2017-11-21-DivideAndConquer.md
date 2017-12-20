@@ -153,3 +153,33 @@ public Point[] closestPairRecursive(점들) {
     return Min(Dleft, Dright, Dcenter);
 }
 ```
+
+가장 핵심이 되는 코드만 이곳에 올리며 모든 코드가 보고싶을 시 아래의 주소에서 볼 수 있다.
+https://github.com/KimMinJoo/AlgorithmStudy/tree/DivideAndConquer
+### Java Code
+```java
+public Pair calculate(Point[] points, int start, int end) {
+    if (end - start < 3) {
+        if (end - start == 2) {
+            return calculateAllCaseClosestPair(Arrays.copyOfRange(points, start, end));
+        }
+
+        Pair pair = new Pair(points[start], points[end], calculateDistance(points[start], points[end]));
+        return pair;
+    }
+
+    int mid = (start + end) / 2;
+    Pair leftPir = calculate(points, start, mid);
+    Pair rigthPair = calculate(points, mid, end);
+
+    Pair minPair = leftPir.getDistance() < rigthPair.getDistance() ? leftPir : rigthPair;
+
+    Pair centerClosestPair = getCenterClosestPair(Arrays.copyOfRange(points, start, end), minPair.getDistance());
+
+    if (centerClosestPair != null) {
+        return centerClosestPair.getDistance() < minPair.getDistance() ? centerClosestPair : minPair;
+    }
+
+    return minPair;
+}
+```
