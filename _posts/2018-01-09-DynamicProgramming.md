@@ -89,11 +89,11 @@ public class Fibonacci {
 ```
 
 ## 동전 거스름돈 문제
-두번째로 동전 거스름돈 문제를 DP를 이용하여 풀어보겠습니다.
-일단 기본적인 방향은 피보나치와 같습니다. 
-Divide And Conquer를 이용해 풀고 거기서 중복문제를 메모이제이션을 통해 해결하는 것입니다.<br>
+두번째로 동전 거스름돈 문제를 DP를 이용하여 풀어보자.
+일단 기본적인 방향은 피보나치와 같다. 
+Divide And Conquer를 이용해 풀고 거기서 중복문제를 메모이제이션을 통해 해결하는 것이다.<br>
 <br>
-일단 분할정복방법으로 문제를 바꾸자면 아래와 같은 정의들이 필요합니다.<br>
+일단 분할정복방법으로 문제를 바꾸자면 아래와 같은 정의들이 필요하다.<br>
 <img src="https://github.com/KimMinJoo/KimMinJoo.github.io/blob/master/images/%EB%8F%99%EC%A0%84%EA%B1%B0%EC%8A%A4%EB%A6%84%EB%8F%88.jpg?raw=true"/>
 
 분할정복방법을 코드로 보면 아래와 같다.<br>
