@@ -53,7 +53,8 @@ fibonacci(n)을 계산하기 위해선 fibonacci(0) ~ fibonacci(n-1)의 계산�
 그 뒤의 방법은 간단하다. 저장공간에 값이 있을경우 그 값을 활용하고 아닐 경우 계산을 진행하면된다.
 코드는 아래와 같다.
 ```java
-public static int calculate(int n) {
+public class Fibonacci {
+	public static int calculate(int n) {
 		int[] memo = new int[n];
 		for (int i = 0; i < n; i++) {
 			memo[i] = -1;
@@ -70,11 +71,21 @@ public static int calculate(int n) {
 			return n;
 		}
 
-		int prev = memo[n - 1] == -1 ? calculate(n - 1, memo) : memo[n - 1];
-		int beforePrev = memo[n - 2] == -1 ? calculate(n - 2, memo) : memo[n - 2];
+		int prev = memo[n - 1];
+		if (prev == -1) {
+			prev = calculate(n - 1, memo);
+			memo[n - 1] = prev;
+		}
+		
+		int beforePrev = memo[n - 2];
+		if (beforePrev == -1) {
+			beforePrev = calculate(n - 1, memo);
+			memo[n - 2] = beforePrev;
+		}
 
 		return prev + beforePrev;
 	}
+}
 ```
 
 ## 동전 거스름돈 문제
@@ -139,7 +150,12 @@ public class Coin {
 			}
 
 			int currentMoney = money - coin;
-			int current = memo[currentMoney] == -1 ? calculate(currentMoney, coins) + 1 : memo[currentMoney];
+			int current = memo[currentMoney];
+
+			if (current == -1) {
+				current = calculate(currentMoney, coins);
+				memo[currentMoney] = current;
+			}
 
 			if (current < min) {
 				min = current;
