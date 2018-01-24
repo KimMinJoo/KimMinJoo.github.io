@@ -128,7 +128,8 @@ n^2이 나오게되는 경우는 점1 ~ 점n까지 존재한다고 가정할 때
 그 뒤 영역사이에서 가장 가까운 거리를 가진 점들을 찾아 그 거리를 비교하면 된다.
 아래의 그림과 같은 상황이다.<br>
 <img src="https://raw.githubusercontent.com/KimMinJoo/KimMinJoo.github.io/2bae125894cf8dfa586bd9545a16a2049fc0b5fc/images/ClosestPairProblem.png"/>
-이증 가장 가까운 두점은 Min(Dleft, Dcenter, Dright)이다.<br>
+<br>
+이 중 가장 가까운 두점은 Min(Dleft, Dcenter, Dright)이다.<br>
 <br>
 이때 Dleft, Dright를 찾는 방법은 재귀를 이용한 방법으로 아래의 그림과 같으며 이는 분할 단계이다.<br>
 <img src="https://raw.githubusercontent.com/KimMinJoo/KimMinJoo.github.io/2bae125894cf8dfa586bd9545a16a2049fc0b5fc/images/ClosestPairProblem2.png"/>
