@@ -184,3 +184,72 @@ public Pair calculate(Point[] points, int start, int end) {
     return minPair;
 }
 ```
+
+## 연쇄행렬곱셈문제 ( Matrix Chain Multiplication Problem)
+
+연쇄 행렬 곱셈이란 여러 개의 행렬을 곱할 때, 어떤 순서로 곱하는 것이 좋은지 찾는 문제이다.<br>
+정확하게는 곱셈 연산의 수가 가장 적은 순서를 찾는 문제이다.<br>
+<br>
+예를 들어서 보자.<br>
+아래와 같은 3개의 행렬을 곱하는 상황이다.<br>
+행렬 A - 1 * 100<br>
+행렬 B - 100 * 1<br>
+행렬 C - 1 * 100<br>
+<br>
+계산전에 간단한 행렬의 성질 두 개를 설명하겠다.
+1. A * B 라는 두 개의 행렬을 곱할 때, A행렬의 열수와 B행렬의 행수는 같아야한다. 
+또한 곱셈의 결과 행렬은 A행렬의 행수를 행수로 가지며, B행렬의 열수를 열수로 가진다.
+즉 (행수, 열수)로 행렬을 표현했을 때 (a,b) * (b,c)일 경우만 행렬의 곱셈이 가능하며, 결과행렬은 (a,c)행렬이다.<br>
+2. (a,b) * (b,c)라는 행렬의 곱은 a * b * c만큼의 곱셈연산을 한다.<br>
+<br>
+일단 (A * B) * C 의 순서를 알아보자.<br>
+위의 성질을 이용해 A * B행렬의 곱은 총 100번의 연산을 거치며 나온 결과 행렬은 (1,1)행렬이다.
+즉 (1,1) * (1*100) 행렬의 곱셈이 또 다시 일어나므로 100번의 연산을 더 거친다.
+총 200번의 곱셈연산을 가진다.<br>
+두번째로 A * (B * C)의 순서를 알아보자.<br>
+B * C행렬의 곱은 총 10000번의 연산을 거치며 나온 결과행렬은 (100, 100)행렬이다.
+즉 (1,100) * (100,100) 행렬의 곱셈이 또 다시 일어나므로 10000번의 연산을 더 거친다.
+총 20000번의 곱셈연산을 가진다.<br>
+<br>
+하지만 행렬의 경우 곱셈의 결합법칙이 성립하므로 두 연산의 결과는 같다.
+따라서 이 문제의 경우 N개의 행렬의 곱셈을 할 경우 가장 적은 곱셈의 연산수를 가지는 순서를 찾는 문제이다.<br>
+<br>
+
+### 분할 정복 알고리즘을 이용한 연쇄행렬곱셈문제
+이 문제를 분할정복으로 푸는 방법을 알아보자.<br>
+N개의 행렬 A1, A2, ..., AN이 있다고하자.
+이 때 분할하는 방법은 A1 * (A2 * A3 * ... * AN ), (A1 * A2) * (A3 * A4 * ... * AN),...,(A1 * A2 * ... * AN-1) * AN까지 총 n-1개가 있다.
+여기서부터 아래와 같은 정의를 가지고 가자.<br>
+<img src="https://github.com/KimMinJoo/KimMinJoo.github.io/blob/master/images/MatrixChain.JPG?raw=true"/><br>
+위의 정의를 통해 연쇄 행렬 곱셈문제의 답을 찾아보자면 아래와 같다..<br>
+<img src="https://github.com/KimMinJoo/KimMinJoo.github.io/blob/master/images/MatrixChain2.JPG?raw=true"/><br>
+행렬 A1부터 AK까지의 최소 곱셈연산수 + AK+1부터 AN까지의 최소 곱셈연산수  + 결과 행렬들의 곱셈연산수 이다.
+<br>
+아래는 구현 코드이다.
+
+### Java Code
+```java
+public int calculate(Matrix[] matrices, int start, int end) {
+		if (start == end) {
+			return 0;
+		}
+
+		if (start + 1 == end) {
+			return matrices[start].getRow() * matrices[start].getColumn() * matrices[end].getColumn();
+		}
+
+		int min = Integer.MAX_VALUE;
+		for (int i = start + 1; i < end; i++) {
+			int left = calculate(matrices, start, i);
+			int right = calculate(matrices, i + 1, end);
+			int center = matrices[start].getRow() * matrices[i].getColumn() * matrices[end].getColumn();
+			int value = left + center + right;
+
+			if (value < min) {
+				min = value;
+			}
+		}
+
+		return min;
+	}
+```
