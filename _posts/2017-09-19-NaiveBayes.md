@@ -6,7 +6,7 @@ title: 기계학습스터디] Naive Bayes
 ### 확률 이론으로 분류하기
 
 ### 베이즈 정리(Bayes' theorem)
-확률론과 통계학에서, 베이즈 정리는 두 확률변수의 사전 확률과 사후 확률사이의 관계를 나타내는 정리이다.<br>
+확률론과 통계학에서 베이즈 정리는 두 확률변수의 사전 확률과 사후 확률사이의 관계를 나타내는 정리이다.<br>
 식으로 표현할 경우 아래와 같다.<br>
 <br>
 <img src="https://github.com/KimMinJoo/KimMinJoo.github.io/blob/master/images/BayesTheorem.jpg?raw=true"/>
@@ -54,6 +54,7 @@ p1(x,y) < p2(x,y)이면, 분류항목 2에 속한다.<br>
 - 단점 : 입력 데이터를 어떻게 준비하느냐에 따라 민감하게 작용한다.
 - 적용 : 명목형 값. 
 <br>
+
 ### Naive Bayes와 Bayes Theorem과의 관계
 위의 설명에서 Naive Bayes에 대해서 간단하게 얘기한다면,
 p1(x,y) > p2(x,y)이면, 분류항목 1에 속하고,<br>
