@@ -3,8 +3,6 @@ layout: post
 title: Spring Boot Project에 DataBase 연동하기
 ---
 
-# Spring Boot Project에 DataBase 연동하기
-
 이글은 신규 프로젝트 진행정리 2번쨰글입니다.
 이전글들을 읽으시면 이해가 더 편합니다.
 [1편 Spring Initializr를 이용해 SpringBoot Project 생성하고 분석하기](https://kmjoo91.github.io/SpringInitializr/)

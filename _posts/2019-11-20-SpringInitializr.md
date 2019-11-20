@@ -2,9 +2,7 @@
 layout: post
 title: Spring Initializr를 이용해 SpringBoot Project 생성하고 분석하기
 ---
-
-# Spring Initializr를 이용해 SpringBoot Project 생성하고 분석하기
-
+신규프로젝트 1번쨰 진행글
 
 ## 1. spring boot 프로젝트 생성
 [Spring Initializr](https://start.spring.io/)를 이용해 생성.
