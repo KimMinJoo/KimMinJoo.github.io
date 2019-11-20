@@ -98,11 +98,11 @@ Maven Project 이므로 생성 후 가장 기본적으로 pom.xml을 본다!
 `<relativePath>`의 경우 내가 설정해준게아니지만 친절하게 영어로 써있다. maven도 상속이 가능한데 이때 parent가 상위폴더가 아닌 다른폴더에 있을때 설정해주는 값이다.  
 ex)
  ``` <relativePath>../../ParentProject/pom.xml</relativePath> ```
- 
+   
  ### `<groupId>, <artifactId>, <version>, <name>, <description>`
 그 아래부분도 parent에 있는것과 같이 내가 설정해준 값으로 들어간다. 따라서 설명생략!  
 모르겠다면 아까말했듯이 한번 만들어보면 알 수 있다. (그래도 모르면 물어본다.)  
- 
+   
  ### `<properties>`
 다음은 properties다.
 여기엔 기본적으로 java.version이 들어가있다. 이건 내가 선택한버전인 11로 들어가있다.  
@@ -110,8 +110,8 @@ ex)
 근데 보통 properties라면 다른곳에서 사용하기 마련인데 java.version은 사용하는데도 없는데 기본으로 들어간다!?!?  
 찾아보니 SpringBoot명세라고 한다. ([출처](https://www.baeldung.com/maven-java-version))  
 참고로 SpringBoot 2는 1.8부터 동작한다.  
-
-
+  
+  
 ### `<dependencies>`
 이건 아까 선택한 애들이 들어가있다.  
 1.spring boot 프로젝트 생성 의 dependencies에서 선택한 애들을 보자  
@@ -284,7 +284,7 @@ Maven Profile설정도 필요하게된다면 아마도 Maven Profile로 합치�
 spring.profiles.active를 사용한다면 local, alpha등 환경과 상관없이 빌드하고 run하는 시점에 -Dspring.profiles.active={profile}을 넣어주면 알아서 실행할 수있다는 장점이있다!  
   
 resources폴더아래 아래와 같이 만들어줬다.  
-![image-20191119-190245-536.png](/files/0a7056be-6df7-1560-816e-831d4d293ff5)
+![application.yml](https://github.com/kmjoo91/kmjoo91.github.io/blob/master/images/application.png?raw=true)
   
 또한 IntelliJ에서 SpringBoot를 실행시킬땐 아래화면처럼 해준다.  
-![image-20191119-190340-757.png](/files/0a7056be-6df7-1560-816e-831e24d7415a)
+![intelliJActiveProfile](https://github.com/kmjoo91/kmjoo91.github.io/blob/master/images/intellijActivProfile.jpg?raw=true)
