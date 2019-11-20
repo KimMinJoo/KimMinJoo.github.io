@@ -87,23 +87,23 @@ Maven Project 이므로 생성 후 가장 기본적으로 pom.xml을 본다!
 
 일단 pom.xml을 위에서 부터 살펴보자.  
 
-### `<moduleVersion>`
+### `<moduleVersion>`  
 `<modelVersion>`의 경우 4.0.0이라고 써있는데 이것은 maven의 pom.xml모델버전이라고한다. pom.xml도 버전이 있는모양.... 처음알았다.  
 ([출처](https://jeong-pro.tistory.com/168))  
 근데 팀내 가장오래된 프로젝트도 4.0.0이다. 그냥 4.0.0만 쓰이는듯하다. 나중에 자세히 알아봐야겠다.  
 
-### `<parent>`
+### `<parent>`  
 먼저 parent에 있는 항목들은 [Spring Initializr](https://start.spring.io/)에서 설정해준 값들로 잘 들어가있다. 
 뭔지 모르겠다면 만들어보자 만들어보면 알 수 있다.
 `<relativePath>`의 경우 내가 설정해준게아니지만 친절하게 영어로 써있다. maven도 상속이 가능한데 이때 parent가 상위폴더가 아닌 다른폴더에 있을때 설정해주는 값이다.  
 ex)
- ``` <relativePath>../../ParentProject/pom.xml</relativePath> ```
+ ``` <relativePath>../../ParentProject/pom.xml</relativePath> ```  
    
- ### `<groupId>, <artifactId>, <version>, <name>, <description>`
+ ###  `<groupId>, <artifactId>, <version>, <name>, <description>`  
 그 아래부분도 parent에 있는것과 같이 내가 설정해준 값으로 들어간다. 따라서 설명생략!  
 모르겠다면 아까말했듯이 한번 만들어보면 알 수 있다. (그래도 모르면 물어본다.)  
    
- ### `<properties>`
+ ###  `<properties>`  
 다음은 properties다.
 여기엔 기본적으로 java.version이 들어가있다. 이건 내가 선택한버전인 11로 들어가있다.  
 [Spring Initializr](https://start.spring.io/)에서 처음 만들때 버전을 잘못선택했다면 여기서 바꿔줄것!  
