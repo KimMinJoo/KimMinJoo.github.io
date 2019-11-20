@@ -99,11 +99,11 @@ Maven Project 이므로 생성 후 가장 기본적으로 pom.xml을 본다!
 ex)
  ``` <relativePath>../../ParentProject/pom.xml</relativePath> ```  
    
- ###  `<groupId>, <artifactId>, <version>, <name>, <description>`  
+###  `<groupId>, <artifactId>, <version>, <name>, <description>`  
 그 아래부분도 parent에 있는것과 같이 내가 설정해준 값으로 들어간다. 따라서 설명생략!  
 모르겠다면 아까말했듯이 한번 만들어보면 알 수 있다. (그래도 모르면 물어본다.)  
    
- ###  `<properties>`  
+###  `<properties>`  
 다음은 properties다.
 여기엔 기본적으로 java.version이 들어가있다. 이건 내가 선택한버전인 11로 들어가있다.  
 [Spring Initializr](https://start.spring.io/)에서 처음 만들때 버전을 잘못선택했다면 여기서 바꿔줄것!  
