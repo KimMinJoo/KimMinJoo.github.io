@@ -1,3 +1,8 @@
+---
+layout: post
+title: Spring Initializr를 이용해 SpringBoot Project 생성하고 분석하기
+---
+
 # Spring Initializr를 이용해 SpringBoot Project 생성하고 분석하기
 
 
